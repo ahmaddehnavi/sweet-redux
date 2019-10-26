@@ -6,7 +6,7 @@
 
 1. NumberRedux.ts
 
-```
+```typescript
 import SweetRedux from 'sweet-redux'
 
 const NumberRedux= SweetRedux.create({
@@ -39,7 +39,7 @@ export default NumberRedux
 ```
 
 2. Store.ts
-```
+```typescript
 import { createStore } from 'redux'
 import SweetRedux from 'sweet-redux'
 import NumberRedux from './NumberRedux'
@@ -58,7 +58,7 @@ export defaulr store;
 ```
 
 3. Connected Component
-```
+```typescript
 type StateProps= {
   value:number
 }
@@ -84,7 +84,7 @@ class MyComponent extends React.Component<StateProps&ActionProps> {
 ```
 
 4. Connect Hoc
-```
+```typescript
 export default connect<StateProps,ActionProps>(
   (state)=>({
       value:NumberRedux.selectors.selectCurrentValue(state)
