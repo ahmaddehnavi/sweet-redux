@@ -90,8 +90,6 @@ type PGeneratedReduxType<NameSpace extends string = string, State = any, Reducer
     reducer: ReducerType,
 }
 
-declare var __DEV__: boolean | undefined;
-
 function logError(message: string) {
     console.error('\nsweet-redux:\n' + message + '\n')
 }
@@ -99,8 +97,8 @@ function logError(message: string) {
 
 const actionBuilder = createActionBuilder();
 export default class ReduxUtil {
-    static debug: boolean = !!__DEV__;
 
+    static debug: boolean = true;
     /**
      * create init state, reducers, action makers and selectors
      * @see extractReducers
@@ -117,6 +115,14 @@ export default class ReduxUtil {
         p.debug = p.debug || this.debug;
 
         let actionCreatorMap = p.actions(actionBuilder as any);
+
+        if (p.debug) {
+            console.log(
+                `Sweet Redux (${p.namespace}) debug mode is on\n` +
+                'you can disable debug mode to improve performance in production build\n' +
+                'check "SweetRedux.debug=false" and "SweetRedux.create({ debug:false ,...})"'
+            )
+        }
 
         let actions: any = {};
         Object.keys(actionCreatorMap).forEach(actionCreatorName => {
@@ -213,7 +219,7 @@ export default class ReduxUtil {
     }
 
 
-    static extractReducers<T extends string>(...reduxInfo: Array<PGeneratedReduxType<T>>): { [key in T]: Reducer<any, any> } {
+    static extractReducers<T extends string>(...reduxInfo: Array<PGeneratedReduxType<T>>): any/* { [key in T]: Reducer<any, any> }*/ {
         let reducers: any = {};
         if (this.debug) {
             reduxInfo.forEach(redux => {
@@ -234,7 +240,7 @@ export default class ReduxUtil {
         return reducers;
     }
 
-    static extractInitState<T extends string>(...reduxInfo: Array<PGeneratedReduxType<T>>): { [key in T]: any } {
+    static extractInitState<T extends string>(...reduxInfo: Array<PGeneratedReduxType<T>>): any /*{ [key in T]: any}*/ {
         let state: any = {};
         if (this.debug) {
             reduxInfo.forEach(redux => {

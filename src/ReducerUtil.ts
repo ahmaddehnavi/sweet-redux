@@ -22,11 +22,6 @@ export class ReducerUtil {
             }
         });
 
-        if (p.debug) {
-            console.log(`${p.name}':`)
-            console.log(reducersMap);
-        }
-
         const reducer = (state = p.initState, action: PReduxAction<string>) => {
             let reducerFunc = reducersMap.get(action.type);
             if (reducerFunc) {
