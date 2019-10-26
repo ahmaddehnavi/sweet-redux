@@ -1,6 +1,6 @@
 {
   "name": "sweet-redux",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Redux util",
   "repository": "https://github.com/ahmaddehnavi/sweet-redux.git",
   "types": "dist/index.d.ts",
