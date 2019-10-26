@@ -56,9 +56,9 @@ const store = createStore(combinedReducers,initState)
 
 export defaulr store;
 ```
+
 3. Connected Component
 ```
-
 type StateProps= {
   value:number
 }
@@ -67,6 +67,24 @@ type ActionProps={
   set:(value:number)=>void
 }
 
+class MyComponent extends React.Component<StateProps&ActionProps> {
+    render (){
+        return (
+            <View>
+                <Text> value: {this.props.value}</Text>
+                <Button title='set 5' onPress={this.handleOnPress}/>
+            </View>
+        )
+    }
+    
+    private handleOnPress=()=>{
+        this.props.set(5)
+    }
+}
+```
+
+4. Connect Hoc
+```
 export default connect<StateProps,ActionProps>(
   (state)=>({
       value:NumberRedux.selectors.selectCurrentValue(state)
