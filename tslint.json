@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "tslint-clean-code"
+  ],
+  "rules": {
+    "triple-equals": true,
+    "quotemark": true,
+    "no-unused-variable": false,
+    "no-unused-expression": false
+  }
+}

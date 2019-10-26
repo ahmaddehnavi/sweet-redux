@@ -1,0 +1,20 @@
+{
+  "name": "redux-util",
+  "version": "0.0.10",
+  "description": "Redux util",
+  "repository": "https://github.com/ahmaddehnavi/redux-util.git",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
+  "author": "Ahmad Dehnavi",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+   
+  },
+  "devDependencies": {
+    "tslint-clean-code": "^0.2.9"
+  }
+}
