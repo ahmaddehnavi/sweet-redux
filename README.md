@@ -94,3 +94,26 @@ export default connect<StateProps,ActionProps>(
   })
 )(MyComponent)  
 ```
+
+5. create store
+```typescript
+import { createStore ,combinedReducer} from 'redux'
+import SweetRedux from 'sweet-redux'
+import NumberRedux from './NumberRedux'
+
+let reducers = SweetRedux.extractReducers(
+  NumberRedux
+)as any
+
+let initState = SweetRedux.extractInitState(
+  NumberRedux
+)as any
+
+const store = createStore(
+  combinedReducer(reducers),
+  initState
+)
+
+export default store;
+```
+
