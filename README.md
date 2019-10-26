@@ -2,6 +2,9 @@
 # How to install
 `yarn add sweet-redux` or  `npm install sweet-redux --save`
 
+# Usage Example
+https://repl.it/@ahmaddehnavi/Sweet-Redux-Demo
+
 # How to use 
 
 1. NumberRedux.ts
