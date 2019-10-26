@@ -1,25 +1,28 @@
 {
   "name": "sweet-redux",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Redux util",
   "repository": "https://github.com/ahmaddehnavi/sweet-redux.git",
   "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "browser": "dist.browser/index.js",
   "scripts": {
     "build": "tsc && tsc -p tsconfig.browser.json"
   },
   "files": [
     "dist",
-    "dist.browser"
+    "dist.browser",
+    "src"
   ],
   "author": "Ahmad Dehnavi",
   "license": "MIT",
   "private": false,
   "dependencies": {
     "immer": "^4.0.2",
-    "redux": "^4.0.4",
     "reselect": "^4.0.0"
   },
   "devDependencies": {
+    "@types/redux": "^3.6.0",
     "tslint-clean-code": "^0.2.9",
     "typescript": "^3.6.4"
   }
