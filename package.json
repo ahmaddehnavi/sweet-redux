@@ -3,8 +3,7 @@
   "version": "0.0.2",
   "description": "Redux util",
   "repository": "https://github.com/ahmaddehnavi/redux-util.git",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc && tsc -p tsconfig.browser.json"
   },

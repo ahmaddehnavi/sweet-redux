@@ -2,7 +2,6 @@ import {createActionBuilder, PReduxActionCreator} from './ActionUtil';
 import {createSelector, Selector} from 'reselect';
 import {Reducer} from 'redux';
 import {ReducerUtil} from './ReducerUtil';
-import Application from '../../configs/Application';
 import {Draft} from 'immer';
 
 // type ValuesOf<T extends any[]> = T[number];
@@ -36,17 +35,29 @@ type Input<State,
      */
     types?: Types,
     debug?: boolean,
-
+    /**
+     * actions map
+     * @param create
+     */
     actions: (
+        /**
+         *  create an action maker
+         *  if you don't pass reducer function then redux state will not change
+         *
+         *  @see create.immer for a more clean way
+         *  @see extractReducers
+         */
         create: (<Payload extends {}, Type extends string = any>(
             type: Type,
             reducer?: (state: State, payload?: Payload) => State
         ) => PReduxActionCreator<Type, Payload>) & {
             /**
              * can mutate draft as a normal js and keep state immutable
+             *
              * @param type
              * @param reducer
              * @see https://immerjs.github.io/immer/docs/introduction for more information
+             * @see create
              */
             immer: <Payload extends {}, Type extends string = any> (
                 type: Type,
@@ -54,8 +65,19 @@ type Input<State,
             ) => PReduxActionCreator<Type, Payload>
         }
     ) => ActionCreatorMap,
-
+    /**
+     * selectors map
+     * @param create
+     *
+     * @see https://github.com/reduxjs/reselect
+     */
     selectors: (
+        /**
+         * create simple selector on current name space state
+         * if you need more complicated selector use createSelector from "reselect" and return it
+         *
+         * @see https://github.com/reduxjs/reselect
+         */
         create: <R>(selector: Selector<State, R>) => PSelectorType<RootState, R, any>)
         => SelectorsMap
 }
@@ -68,18 +90,23 @@ type PGeneratedReduxType<NameSpace extends string = string, State = any, Reducer
     reducer: ReducerType,
 }
 
+declare var __DEV__: boolean | undefined;
 
-// type IgnoreStateType<Fn extends Function> = Fn extends (state, ...props: infer A) => any ? (state, ...p: A) => any : (state) => any
-//
-// type X<S, R, P, T extends { [key: string]: PSelector<S, R, P> }> = {
-//     [K in keyof T]?: IgnoreStateType<any, any, any, T[K]>;
-// };
+function logError(message: string) {
+    console.error('\nsweet-redux:\n' + message + '\n')
+}
 
 
 const actionBuilder = createActionBuilder();
 export default class ReduxUtil {
-    static debug: boolean = false;
+    static debug: boolean = !!__DEV__;
 
+    /**
+     * create init state, reducers, action makers and selectors
+     * @see extractReducers
+     * @see extractInitState
+     * @param p
+     */
     static create<State,
         Namespace extends string,
         Types extends { [key: string]: string },
@@ -87,7 +114,7 @@ export default class ReduxUtil {
         SelectorsMap extends { [key: string]: PSelectorType<any, any, any> }>
     (p: Input<State, Namespace, Types, ActionCreatorMap, SelectorsMap>) {
 
-        p.debug = p.debug || this.debug; // || __DEV__ || Application.IS_DEBUG;
+        p.debug = p.debug || this.debug;
 
         let actionCreatorMap = p.actions(actionBuilder as any);
 
@@ -103,27 +130,31 @@ export default class ReduxUtil {
              * prevent use same action type more than ones
              * and force to have prefix in all actions
              */
-            if (p.debug || __DEV__ || Application.IS_DEBUG) {
+            if (p.debug) {
                 if (!type) {
-                    console.error(`invalid action type (${String(type)}) , check ${creator.displayName}`)
+                    logError(`invalid action type (${String(type)}) , check ${creator.displayName}`)
                 }
                 if (!String(type).startsWith(p.namespace)) {
-                    console.error(
+                    logError(
                         `invalid action type (${type})\n\n` +
-                        `all actions type should be started with namespace ("${p.namespace}" in current error)\n\n` +
-                        `valid example :\n "${p.namespace}/${type}"\n\n` +
+                        `all actions type should be started with namespace ("${p.namespace})"\n\n` +
+                        `1. this pattern make help to find source of error and bugs and also prevent you from using same action type more than one time.` +
+                        `2. we may want to use this pattern to do some optimization later.\n\n` +
+                        `valid example:\n "${p.namespace}/${type}"\n` +
                         `check:\n ${creator.displayName}`
                     )
                 }
                 if (actions[type]) {
-                    console.error(
+                    logError(
+                        '\n\n' +
                         'You try to use a same action type more than ones\n\n' +
                         'because this may cause a bug you should fix it now.\n\n' +
-                        `check below :\n\n` +
-                        `type : ${type}\n\n` +
+                        `info:\n\n` +
+                        `action type : ${type}\n\n` +
                         `first action maker : ${creator.displayName}\n\n` +
                         `second action maker ${actions[type].displayName}\n\n` +
-                        `then fix it. :)`)
+                        `\n\n`
+                    )
                 }
                 actions[type] = creator
             }
@@ -138,22 +169,27 @@ export default class ReduxUtil {
 
         function select(root: any) {
             if (!root) {
-                console.error(
-                    '\n\nReduxUtil:\n\nroot state is not valid (' + root + ')\n\n' +
+                logError(
+                    '\n\n' +
+                    'ReduxUtil:\n\n' +
+                    'root state is not valid (' + root + ')\n\n' +
                     'you may forget to pass root state to a selector call\n\n' +
                     `for example a valid call should be like this:\n` +
                     `\t"${p.namespace}.selectors.someSelector(state)"\n\n` +
-                    `check "${p.namespace}.selectors" to find invalid usage.`
+                    `check "${p.namespace}.selectors" to find invalid usage.
+                    \n\n`
                 );
                 return
             }
             let state = root[p.namespace];
             if (!state) {
-                console.error(
-                    '\n\nReduxUtil:\n\nstate is not valid (' + state + ')\n\n' +
+                logError(
+                    '\n\n' +
+                    'ReduxUtil:\n\n' +
+                    'state is not valid (' + state + ')\n\n' +
                     `maybe forget to add init state to root init state \n\n` +
-                    `check ReduxUtil.extractInitState usage and make sure include generated redux with namespace "${p.namespace}"\n\n` +
-                    `check src/redux/index.ts`
+                    `check ReduxUtil.extractInitState usage and make sure include generated redux with namespace "${p.namespace}"
+                    \n\n`
                 );
                 return
             }
@@ -172,33 +208,50 @@ export default class ReduxUtil {
             selectors, // : selectors as ({ [key in keyof typeof selectors]: typeof selectors[key] }),
             reducer,
         };
-        if (p.debug) {
-            // console.log(redux)
-        }
+
         return redux;
     }
 
 
     static extractReducers<T extends string>(...reduxInfo: Array<PGeneratedReduxType<T>>): { [key in T]: Reducer<any, any> } {
         let reducers: any = {};
-        reduxInfo.forEach(redux => {
-            reducers[redux.namespace] = redux.reducer
-        });
+        if (this.debug) {
+            reduxInfo.forEach(redux => {
+                if (reducers[redux.namespace]) {
+                    logError(
+                        'ReduxUtil.extractReducers() :\n\n' +
+                        'You try use same key more than ones\n\n' +
+                        `check ReduxUtil.extractInitState usages and find "${redux.namespace}"`
+                    )
+                }
+                reducers[redux.namespace] = redux.reducer
+            });
+        } else {
+            reduxInfo.forEach(redux => {
+                reducers[redux.namespace] = redux.reducer
+            });
+        }
         return reducers;
     }
 
     static extractInitState<T extends string>(...reduxInfo: Array<PGeneratedReduxType<T>>): { [key in T]: any } {
         let state: any = {};
-        reduxInfo.forEach(redux => {
-            if (state[redux.namespace]) {
-                console.error(
-                    'ReduxUtil.extractInitState() :\n\n' +
-                    'You try use same key more than ones\n\n' +
-                    `check ${redux.namespace}`
-                )
-            }
-            state[redux.namespace] = redux.initState
-        });
+        if (this.debug) {
+            reduxInfo.forEach(redux => {
+                if (state[redux.namespace]) {
+                    logError(
+                        'ReduxUtil.extractInitState() :\n\n' +
+                        'You try use same key more than ones\n\n' +
+                        `check ReduxUtil.extractInitState usages and find "${redux.namespace}"`
+                    )
+                }
+                state[redux.namespace] = redux.initState
+            });
+        } else {
+            reduxInfo.forEach(redux => {
+                state[redux.namespace] = redux.initState
+            });
+        }
         return state;
     }
 

@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist.browser",
+    "rootDir": "./src",
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "commonjs",
+    "lib": [
+      "dom",
+      "es5",
+      "es6",
+      "es2015",
+      "es2017",
+      "es2016"
+    ],
+    "jsx": "react",
+    "sourceMap": true,
+    "downlevelIteration": true,
+    "noImplicitUseStrict": true,
+    "declaration": true,
+    "declarationMap": true,
+    "importHelpers": false,
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": false,
+
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}

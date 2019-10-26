@@ -8,7 +8,9 @@ export type PReduxActionCreator<Type, Payload = any, State = any> = ((payload: P
     displayName?: string
 }
 
-
+/**
+ * do not use this function directly as we may change/remove it
+ */
 export function createActionBuilder<State>() {
 
     function create<Payload extends {}, Type extends string = any>(
@@ -45,19 +47,6 @@ export function createActionBuilder<State>() {
         return maker;
     }
 
-    // function listApi<Payload extends {}, ItemType = any, Type extends string = any>(
-    //     type,
-    //     reducer: (state: State, api: PaginationApiStateType<ItemType>, payload: Payload) => State) {
-    //     return create(
-    //         type,
-    //         (state, payload) =>reducer(state,{
-    //
-    //         })
-    //     )
-    // }
-    //
-    // create.listApi = listApi
-
     create.immer = immer;
-    return create // as (typeof create & { listApi: typeof listApi })
+    return create
 }
