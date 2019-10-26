@@ -1,8 +1,8 @@
 {
   "name": "sweet-redux",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Redux util",
-  "repository": "https://github.com/ahmaddehnavi/redux-util.git",
+  "repository": "https://github.com/ahmaddehnavi/sweet-redux.git",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc && tsc -p tsconfig.browser.json"
