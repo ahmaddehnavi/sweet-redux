@@ -43,11 +43,11 @@ export default NumberRedux
 
 2. Store.ts
 ```typescript
-import { createStore } from 'redux'
+import { createStore,combineReducers } from 'redux'
 import SweetRedux from 'sweet-redux'
 import NumberRedux from './NumberRedux'
 
-let combinedReducers = SweetRedux.extractReducers(
+let reducers = SweetRedux.extractReducers(
   NumberRedux
 )
 
@@ -55,7 +55,8 @@ let initState = SweetRedux.extractInitState(
   NumberRedux
 )
 
-const store = createStore(combinedReducers,initState)
+const store = createStore(
+combineReducers(reducers),initState)
 
 export defaulr store;
 ```
