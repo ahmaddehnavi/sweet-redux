@@ -7,7 +7,7 @@ https://repl.it/@ahmaddehnavi/Sweet-Redux-Demo
 
 # How to use 
 
-1. NumberRedux.ts
+NumberRedux.ts
 
 ```typescript
 import SweetRedux from 'sweet-redux'
@@ -41,27 +41,7 @@ const NumberRedux= SweetRedux.create({
 export default NumberRedux
 ```
 
-2. Store.ts
-```typescript
-import { createStore,combineReducers } from 'redux'
-import SweetRedux from 'sweet-redux'
-import NumberRedux from './NumberRedux'
-
-let reducers = SweetRedux.extractReducers(
-  NumberRedux
-)
-
-let initState = SweetRedux.extractInitState(
-  NumberRedux
-)
-
-const store = createStore(
-combineReducers(reducers),initState)
-
-export defaulr store;
-```
-
-3. Connected Component
+Connected Component
 ```typescript
 type StateProps= {
   value:number
@@ -87,7 +67,7 @@ class MyComponent extends React.Component<StateProps&ActionProps> {
 }
 ```
 
-4. Connect Hoc
+Connect Hoc
 ```typescript
 export default connect<StateProps,ActionProps>(
   (state)=>({
@@ -99,7 +79,7 @@ export default connect<StateProps,ActionProps>(
 )(MyComponent)  
 ```
 
-5. create store
+create store
 ```typescript
 import { createStore ,combinedReducer} from 'redux'
 import SweetRedux from 'sweet-redux'
