@@ -18,7 +18,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "immer": "^4.0.2",
+    "immer": "^8.0.1",
     "reselect": "^4.0.0"
   },
   "devDependencies": {
